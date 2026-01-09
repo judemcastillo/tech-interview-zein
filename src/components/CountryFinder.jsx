@@ -50,7 +50,7 @@ export default function CountryFinder() {
 	function formatCurrencies(currency) {
 		if (!currency) return "-";
 		const currencies = Object.values(currency);
-		return currencies.map((c) => c.symbol + " " + c.name).join(", ");
+		return currencies.map((c) => c.symbol + " " + c.name).join(",  ");
 	}
 	function formatLanguages(item) {
 		const languages = Object.values(item);
@@ -59,28 +59,49 @@ export default function CountryFinder() {
 	function addToFavorites(c) {
 		if (favorites.some((favorite) => favorite.country === c.name.common))
 			return;
-		setFavorites((prev) => [...prev, { country: c.name.common }]);
+
+		setFavorites((prev) => [
+			...prev,
+			{
+				country: c.name.common,
+				capital: c.capital.join(),
+				currencies: formatCurrencies(c.currencies),
+				languages: formatLanguages(c.languages),
+			},
+		]);
+	}
+	function deleteFavorite(c) {
+		if (!c) return;
+		setFavorites((prev) => prev.filter((p) => p.country !== c.country));
 	}
 	return (
 		<div className="h-screen w-screen flex items-center p-5 flex-col">
-			<form onSubmit={handleSubmit}>
+			<form onSubmit={handleSubmit} className="border rounded-lg pl-1">
 				<input
 					type="text"
-					className="border-2 h-fit"
+					className=" h-fit focus:outline-0"
 					onChange={(e) => setQuery(e.target.value)}
 					value={query}
 				/>
-				<button className="cursor-pointer border-2" type="submit">
+				<button
+					className="p-2 cursor-pointer border-none
+				 bg-blue-300 rounded-r-lg border-l-2 border-black"
+					type="submit"
+				>
 					Search
 				</button>
 			</form>
-			<div className="flex flex-row flex-wrap h-full p-5">
+			<div className="flex flex-row flex-wrap h-100 p-5 gap-4 ">
 				{countries.map((country) => (
-					<div className="border-2 h-60 p-5 w-50 rounded-lg">
-						<div>Country: {country.name.common}</div>
-						<div>Capital: {country.capital.join()}</div>
-						<div>Currencies: {formatCurrencies(country.currencies)}</div>
-						<div>Languages: {formatLanguages(country.languages)}</div>
+					<div className="overflow-x-hidden border-2 h-70 p-5 w-60 rounded-lg flex flex-col justify-between">
+						<div>
+							<div>Country: {country.name.common}</div>
+							<div>Capital: {country.capital.join()}</div>
+							<div>Currencies: {formatCurrencies(country.currencies)}</div>
+							<div >
+								Languages: {formatLanguages(country.languages)}
+							</div>
+						</div>
 						<button
 							className="border p-2 text-sm rounded bg-red-400"
 							onClick={() => addToFavorites(country)}
@@ -90,11 +111,23 @@ export default function CountryFinder() {
 					</div>
 				))}
 			</div>
-			<div>
-				{" "}
-				<h1>Favorites: </h1>
+			<h1 className="font-bold text-3xl mb-10">Favorites: </h1>
+			<div className="w-full  flex flex-row gap-4 flex-wrap justify-center items-center">
 				{favorites.map((favorite) => (
-					<div>{favorite.country}</div>
+					<div className="overflow-x-hidden border-2 h-70 p-5 w-60 rounded-lg flex flex-col justify-between">
+						<div>
+							<div>Country: {favorite.country}</div>
+							<div>Capital: {favorite.capital}</div>
+							<div>Currencies: {favorite.currencies}</div>
+							<div>Languages: {favorite.languages}</div>
+						</div>
+						<button
+							className="border p-2 text-sm rounded bg-slate-500 cursor-pointer"
+							onClick={() => deleteFavorite(favorite)}
+						>
+							Delete
+						</button>
+					</div>
 				))}
 			</div>
 		</div>
