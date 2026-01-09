@@ -9,8 +9,8 @@ export function App() {
 
 	return (
 		<>
-			{/* <Wordle /> */}
-			<CountryFinder />
+			<Wordle />
+			{/* <CountryFinder /> */}
 		</>
 	);
 }
