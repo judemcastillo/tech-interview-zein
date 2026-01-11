@@ -1,2 +1,17 @@
 @import "tailwindcss";
 
+button {
+	border: 1px solid rgb(77, 174, 219);
+	background-color: aqua;
+	padding-left: 10px;
+	padding-right: 10px;
+	border-radius: 5px;
+	cursor: pointer;
+}
+button:hover {
+	color: antiquewhite;
+}
+button:disabled{
+    background-color: gray;
+    cursor: not-allowed;
+}
